@@ -11,6 +11,24 @@
         <h5>Nombre del cliente: {{ nombreCliente }}</h5>
         <button @click='incrementar'>Incrementar</button>
         <h5>Contador: {{ contador }}</h5>
+        <hr>
+        <div>
+            <input v-model="number1" type="text" placeholder="Número 1">
+            <input v-model="number2" type="text" placeholder="Número 2">
+            <button @click="sumar">Sumar</button>
+            <h5>resultado de la suma: {{ suma }}</h5>
+            <p v-if='suma >= 0'>La suma es mayor que 0</p>
+            <p v-else>La suma es menor que 0</p>
+        </div>
+        <hr>
+        <div>
+            <input v-model="n1" type="text" placeholder="Número 1">
+            <input v-model="n2" type="text" placeholder="Número 2">
+            <button @click="restar">Restar</button>
+            <h5>resultado de la resta: {{ resta }}</h5>
+            <p v-if='resta >= 0'>La resta es mayor que 0</p>
+            <p v-else>La resta es menor que 0</p>
+        </div>
     </div>
 </template>
 
@@ -34,6 +52,14 @@ export default {
         apellidos: {
             type: String,
             default: "Perez"
+        },
+        nuevoMensaje: {
+            type: String,
+            default: "este es el nuevo mensaje"
+        },
+        viejoMensaje: {
+            type: String,
+            default: "este es el viejo mensaje"
         }
     },
     computed: {
@@ -41,9 +67,36 @@ export default {
             return this.nombre + ' ' + this.apellidos;
         }
     },
+    watch: {
+        mensaje(nuevoMensaje, viejoMensaje) {
+            console.log(`Hemos pasado de ${nuevoMensaje} a `  + nuevoMensaje);
+            console.log(viejoMensaje);
+        }
+    },
     methods: {
         incrementar(){
             this.contador++ 
+        },
+        sumar() {
+            // Convierte a número
+            const num1 = parseFloat(this.number1);
+            const num2 = parseFloat(this.number2);
+            // Comprueba si son números
+            if(isNaN(num1) || isNaN(num2)){
+                alert('No son números');
+            } else {
+                this.suma = num1 + num2;
+            }
+        },
+        restar() {
+            const num1 = parseFloat(this.n1);
+            const num2 = parseFloat(this.n2);
+            // Comprueba si son números
+            if(isNaN(num1) || isNaN(num2)){
+                alert('No son números');
+            } else {
+                this.resta = num1 - num2;
+            }
         }
     },
     data() {
@@ -56,7 +109,11 @@ export default {
                 { id: 4, nombre: 'Ana', apellido: 'Gonzalez' },
                 { id: 5, nombre: 'Maria', apellido: 'Lopez' },
             ],
-            contador: 0
+            contador: 0,
+            number1: 0,
+            number2: 0,
+            suma: 0,
+            resta: 0
         };
     }
 }
