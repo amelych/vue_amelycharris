@@ -52,14 +52,6 @@ export default {
         apellidos: {
             type: String,
             default: "Perez"
-        },
-        nuevoMensaje: {
-            type: String,
-            default: "este es el nuevo mensaje"
-        },
-        viejoMensaje: {
-            type: String,
-            default: "este es el viejo mensaje"
         }
     },
     computed: {
@@ -69,8 +61,7 @@ export default {
     },
     watch: {
         mensaje(nuevoMensaje, viejoMensaje) {
-            console.log(`Hemos pasado de ${nuevoMensaje} a `  + nuevoMensaje);
-            console.log(viejoMensaje);
+            console.log(`Hemos pasado de ${viejoMensaje} a ${nuevoMensaje}`);
         }
     },
     methods: {
@@ -110,10 +101,10 @@ export default {
                 { id: 5, nombre: 'Maria', apellido: 'Lopez' },
             ],
             contador: 0,
-            number1: 0,
-            number2: 0,
             suma: 0,
-            resta: 0
+            resta: 0,
+            nuevoMensaje: "este es el nuevo mensaje",
+            viejoMensaje: "este es el viejo mensaje"
         };
     }
 }
