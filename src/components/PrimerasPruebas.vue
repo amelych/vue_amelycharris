@@ -1,4 +1,5 @@
 <template>
+    <hr>
     <div class="hello">
         <h3>{{ mensaje }}</h3>
         <h4>El resultado de la suma es {{ resultadoSuma }}</h4>
@@ -11,7 +12,6 @@
         <h5>Nombre del cliente: {{ nombreCliente }}</h5>
         <button @click='incrementar'>Incrementar</button>
         <h5>Contador: {{ contador }}</h5>
-        <hr>
         <div>
             <input v-model="number1" type="text" placeholder="Número 1">
             <input v-model="number2" type="text" placeholder="Número 2">
@@ -20,7 +20,6 @@
             <p v-if='suma >= 0'>La suma es mayor que 0</p>
             <p v-else>La suma es menor que 0</p>
         </div>
-        <hr>
         <div>
             <input v-model="n1" type="text" placeholder="Número 1">
             <input v-model="n2" type="text" placeholder="Número 2">
@@ -29,6 +28,7 @@
             <p v-if='resta >= 0'>La resta es mayor que 0</p>
             <p v-else>La resta es menor que 0</p>
         </div>
+        <hr>
     </div>
 </template>
 
@@ -60,8 +60,8 @@ export default {
         }
     },
     watch: {
-        mensaje(nuevoMensaje, viejoMensaje) {
-            console.log(`Hemos pasado de ${viejoMensaje} a ${nuevoMensaje}`);
+        contador(nuevoMensaje, viejoMensaje) {
+            alert(`Hemos pasado de ${viejoMensaje} a ${nuevoMensaje}`);
         }
     },
     methods: {

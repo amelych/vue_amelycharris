@@ -2,17 +2,20 @@
   <img alt="Vue logo" src="./assets/logo.png">
   <HelloWorld msg="Bienvenido a  Vue.js App"/>
   <PrimerasPruebas mensaje="Primeras pruebas" />
+  <ListaTareas mensajeL="Lista tareas" />
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import PrimerasPruebas from './components/PrimerasPruebas.vue';
+import ListaTareas from './components/ListaTareas.vue';
 
 export default {
   name: 'App',
   components: {
     HelloWorld,
-    PrimerasPruebas
+    PrimerasPruebas,
+    ListaTareas
   }
 }
 </script>
