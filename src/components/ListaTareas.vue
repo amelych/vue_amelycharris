@@ -7,18 +7,18 @@
       <h5>Tareas:</h5>
       <h5>Total de tareas: {{ tareas.length }}</h5>
       <ul>
-            <li v-for="(tarea, id) in tareas" :key="id">
-              {{ id + 1 }} . {{ tarea }}
-               <input type="checkbox" @change="completarTarea(id)"/>
-               <button @click="eliminarTarea">Eliminar</button>
-            </li>
-        </ul>
-        <h5>Tareas completadas: </h5>
-        <ul>
-            <li v-for="(tareaC, id) in tareasCompletadas" :key="id">
-              <p class="completada">{{ id + 1 }} . {{ tareaC }}</p>
-            </li>
-        </ul>
+        <li v-for="(tarea, id) in tareas" :key="id">
+          {{ id + 1 }} . {{ tarea.text }} - {{ tarea.fecha }}
+          <input type="checkbox" @change="completarTarea(id)" />
+          <button @click="eliminarTarea(id)">Eliminar</button>
+        </li>
+      </ul>
+      <h5>Tareas completadas: </h5>
+      <ul>
+        <li v-for="(tareaC, id) in tareasCompletadas" :key="id">
+          <p class="completada">{{ id + 1 }} . {{ tareaC.text }}</p>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -31,38 +31,43 @@ export default {
   },
   methods: {
     agregarTarea() {
-      let nuevaTarea = this.nuevaTarea;
-      nuevaTarea.text = this.tareaDefault;
-      nuevaTarea.date = new Date().toLocaleString();
-
+      let nuevaTarea = { text: this.tarea, fecha: new Date().toLocaleString() };
       this.tareas.push(nuevaTarea);
+      this.guardarTareasEnLocalStorage();
     },
     completarTarea(index) {
       this.tareasCompletadas.push(this.tareas[index]);
     },
-    eliminarTarea() {
-        this.tareas.splice(this.index, 1);
-        // this.listarTareas;
+    eliminarTarea(index) {
+      this.tareas.splice(index, 1);
+    },
+    guardarTareasEnLocalStorage() {
+      localStorage.setItem('tareas', JSON.stringify(this.tareas));
+    },
+    cargarTareasDesdeLocalStorage() {
+      const tareasGuardadas = localStorage.getItem('tareas');
+      if (tareasGuardadas) {
+        this.tareas = JSON.parse(tareasGuardadas);
+        console.log(this.tareas);
+      }
     }
   },
   data() {
     return {
+      tarea: "",
       tareas: [],
       tareasCompletadas: [],
-      nuevaTarea : {
-        text: "",
-        fecha: ""
-      }
     };
   },
+  mounted() {
+    this.cargarTareasDesdeLocalStorage();
+  }
 };
 </script>
 
-<style scopped>
-
+<style scoped>
 .completada {
   color: red;
   text-decoration: line-through;
 }
-
 </style>
