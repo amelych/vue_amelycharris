@@ -8,8 +8,15 @@
       <h5>Total de tareas: {{ tareas.length }}</h5>
       <ul>
             <li v-for="(tarea, id) in tareas" :key="id">
-               {{ id + 1 }} . {{ tarea }}
+              {{ id + 1 }} . {{ tarea }}
+               <input type="checkbox" @change="completarTarea(id)"/>
                <button @click="eliminarTarea">Eliminar</button>
+            </li>
+        </ul>
+        <h5>Tareas completadas: </h5>
+        <ul>
+            <li v-for="(tareaC, id) in tareasCompletadas" :key="id">
+              <p class="completada">{{ id + 1 }} . {{ tareaC }}</p>
             </li>
         </ul>
     </div>
@@ -24,7 +31,14 @@ export default {
   },
   methods: {
     agregarTarea() {
-      this.tareas.push(this.tarea);
+      let nuevaTarea = this.nuevaTarea;
+      nuevaTarea.text = this.tareaDefault;
+      nuevaTarea.date = new Date().toLocaleString();
+
+      this.tareas.push(nuevaTarea);
+    },
+    completarTarea(index) {
+      this.tareasCompletadas.push(this.tareas[index]);
     },
     eliminarTarea() {
         this.tareas.splice(this.index, 1);
@@ -34,10 +48,21 @@ export default {
   data() {
     return {
       tareas: [],
+      tareasCompletadas: [],
+      nuevaTarea : {
+        text: "",
+        fecha: ""
+      }
     };
   },
 };
 </script>
 
-<style>
+<style scopped>
+
+.completada {
+  color: red;
+  text-decoration: line-through;
+}
+
 </style>
