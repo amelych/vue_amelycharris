@@ -1,18 +1,24 @@
 <template>
   <div id="tabla-clientes" class="container">
-    <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand">Taller Teis</a>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Buscar</button>
-            </form>
-        </div>
+    <nav class="navbar navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Inicio</a>
+        <a class="navbar-brand" href="#">Clientes</a>
+        <a class="navbar-brand" href="#">Productos</a>
+        <a class="navbar-brand" href="#">Ventas</a>
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Búsqueda" aria-label="Search">
+            <button class="btn btn-dark" type="submit">Buscar</button>
+        </form>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+      </div>
     </nav>
-    <div class="row">
-        <div class="col-md-12">
-            <h2 class="text-center">Listado de Clientes</h2>
-        </div>
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <h2 class="text-center">Listado de Clientes</h2>
+      </div>
     </div>
     <table class="table table-striped mt-5">
       <thead>
