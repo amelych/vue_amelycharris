@@ -116,7 +116,7 @@ export default {
           this.dni = '';
           return
         }
-        const valor = dniNie.replace(/[XYZ]/, (letra)=> {
+        const valor = dniNie.replace(/^[XYZ]/, (letra)=> {
           return letra === 'X' ? '0' : (letra === 'Y' ? '1' : (letra === 'Z' ? '2' : letra))
         });
         const numero = parseInt(valor.slice(0,9), 10);
