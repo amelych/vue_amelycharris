@@ -1,38 +1,8 @@
 <template>
-  <div id="tabla-clientes" class="container">
-    <nav class="navbar navbar-dark bg-primary">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="#">Inicio</a>
-        <a class="navbar-brand" href="#">Clientes</a>
-        <a class="navbar-brand" href="#">Articulos</a>
-        <a class="navbar-brand" href="#">Ventas</a>
-        <a class="navbar-brand" href="#">Contacto</a>
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Búsqueda" aria-label="Search">
-            <button class="btn btn-light" type="submit">
-              <i class="bi bi-search"></i>
-            </button>
-        </form>
-      </div>
-    </nav>
-    <div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
-      <div class="bg-light p-4">
-          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-              <a class="nav-link" href="#">Articulos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Ventas</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contacto</a>
-            </li>
-          </ul>
-      </div>
+  <div>
+      <NavBar/>
     </div>
+  <div id="tabla-clientes" class="container">
     <br/>
     <div class="row">
       <h3 class="text-center font-weight-bold">Gestión Clientes</h3>
@@ -103,9 +73,13 @@
 </template>
 
 <script>
+import NavBar from '@/components/NavBar.vue';
 import Swal from 'sweetalert2';
 export default {
   name: "TablaClientes",
+  components: {
+    NavBar
+  },
   methods: {
     guardar() {
       if(this.nombre.trim() === '' || this.apellido.trim() === '' || this.dni.trim() === '' || this.email.trim() === '') {
