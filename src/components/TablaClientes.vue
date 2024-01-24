@@ -134,41 +134,25 @@ export default {
       return 
     },
     validarDniNie() {
-      let dniNie = this.dni.trim().toUpperCase();
-      this.dni =dniNie;
-      const regexDniNie = /^[0-9XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]/;
-      if(!regexDniNie.test(dniNie)) {
-        this.mostrarAlerta('DNI o NIE no válido', 'error');
-        this.dni = '';
-        return;
-      }
-
-      const numero = parseInt(dniNie.slice(0,8), 10);
-      let letraCalculada = '';
-
-      if(dniNie.charAt(0) === 'X' || dniNie.charAt(0) === 'Y' || dniNie.charAt(0) === 'Z') {
-        switch(dniNie.charAt(0)) {
-          case 'X':
-            // valor 0
-            dniNie = '0' + dniNie.slice(1);
-          break;
-          case 'Y':
-            // valor 1
-            dniNie = '1' + dniNie.slice(1);
-          break;
-          case 'Z':
-            // valor 2
-            dniNie = '2' + dniNie.slice(1);
-          break;
+        let dniNie = this.dni.trim().toUpperCase();
+        this.dni = dniNie;
+        const regexDniNie = /^[0-9XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/;
+        if(!regexDniNie.test(dniNie)) {
+          this.mostrarAlerta('DNI/NIE no válido', 'error');
+          this.dni = '';
+          return
         }
-      } else {
-        letraCalculada = 'TRWAGMYFPDXBNJZSQVHLCKE'.charAt(numero % 23);
-      }
-
-      if (letraCalculada !== dniNie.charAt(8)) {
-        this.mostrarAlerta('DNI o NIE no válido', 'error');
-        this.dni = '';
-      }
+        const valor = dniNie.replace(/[XYZ]/, (letra)=> {
+          return letra === 'X' ? '0' : (letra === 'Y' ? '1' : (letra === 'Z' ? '2' : letra))
+        });
+        const numero = parseInt(valor.slice(0,9), 10);
+        const letraCalculada = 'TRWAGMYFPDXBNJZSQVHLCKE'.charAt(numero%23);
+        if (letraCalculada !== dniNie.charAt(8) || !regexDniNie.test(dniNie)) { 
+            this.mostrarAlerta('DNI/NIE no válido', 'error');
+            return false;
+        } else {
+            return true;
+        }
     },
     modificarCliente(clienteId) {
       const cliente = this.clientes.find(cliente => cliente.id === clienteId);
