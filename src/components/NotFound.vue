@@ -1,10 +1,12 @@
 <template>
-    <div class="row">
+    <div>
+        <div class="row">
         <div class="col-md-12">
             <h2>Perdón, algo hemos hecho mal, pero esta página no existe</h2>
             <hr>
-            <router-link class="btn btn-light-green" :to="{name: 'Inicio'}">Volver al Inicio</router-link>
+            <router-link class="btn btn-light-green" :to="{name: 'inicio'}">Volver al Inicio</router-link>
         </div>
+    </div>
     </div>
 </template>
 

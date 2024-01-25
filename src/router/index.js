@@ -6,7 +6,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'inicio',
     component: PaginaInicio
   },
   {
