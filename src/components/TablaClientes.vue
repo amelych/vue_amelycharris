@@ -1,42 +1,83 @@
 <template>
   <div>
-      <NavBar/>
-    </div>
+    <NavBar />
+  </div>
   <div id="tabla-clientes" class="container">
-    <br/>
+    <br />
     <div class="row">
       <h3 class="text-center font-weight-bold">Gestión Clientes</h3>
     </div>
-    <hr>
+    <hr />
     <div class="container-fluid">
       <div class="row" id="map_section">
         <div class="col-12 col-m-6 col-lg-8 mx-auto">
           <form class="form-inline">
             <div class="input-group mb-3">
-            <span class="input-group-text custom-span" id="basic-addon1">DNI/NIE:</span>
-            <input type="text" class="form-control" v-model="dni" id="dni" name="dni" @blur="validarDniNie">
-            </div> 
-            <div class="input-group mb-3">
-              <span class="input-group-text custom-span" id="basic-addon1">Nombre:</span>
-            <input type="text" class="form-control" v-model="nombre" id="nombre" name="nombre">
+              <span class="input-group-text custom-span" id="basic-addon1"
+                >DNI/NIE:</span
+              >
+              <input
+                type="text"
+                class="form-control"
+                v-model="dni"
+                id="dni"
+                name="dni"
+                @blur="validarDniNie"
+              />
             </div>
             <div class="input-group mb-3">
-              <span class="input-group-text custom-span" id="basic-addon1">Apellidos:</span>
-            <input type="text" class="form-control" v-model="apellido" id="apellido" name="apellido">
+              <span class="input-group-text custom-span" id="basic-addon1"
+                >Nombre:</span
+              >
+              <input
+                type="text"
+                class="form-control"
+                v-model="nombre"
+                id="nombre"
+                name="nombre"
+              />
             </div>
             <div class="input-group mb-3">
-              <span class="input-group-text custom-span" id="basic-addon1">Email:</span>
-            <input type="text" class="form-control" v-model="email" id="email" name="email">
+              <span class="input-group-text custom-span" id="basic-addon1"
+                >Apellidos:</span
+              >
+              <input
+                type="text"
+                class="form-control"
+                v-model="apellido"
+                id="apellido"
+                name="apellido"
+              />
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text custom-span" id="basic-addon1"
+                >Email:</span
+              >
+              <input
+                type="text"
+                class="form-control"
+                v-model="email"
+                id="email"
+                name="email"
+              />
             </div>
             <div class="mb-3 text-center">
-          <button type="button" class="btn btn-primary mx-2" @click="guardar">Guardar</button>
-          <button type="button" class="btn btn-secondary" @click="limpiar">Limpiar</button>
-        </div>
+              <button
+                type="button"
+                class="btn btn-primary mx-2"
+                @click="guardar"
+              >
+                Guardar
+              </button>
+              <button type="button" class="btn btn-secondary" @click="limpiar">
+                Limpiar
+              </button>
+            </div>
           </form>
         </div>
       </div>
     </div>
-    <hr>
+    <hr />
     <div class="row mt-3">
       <div class="col-md-12">
         <h2 class="text-center">Listado de Clientes</h2>
@@ -59,10 +100,18 @@
           <td>{{ cliente.apellido }}</td>
           <td>{{ cliente.email }}</td>
           <td class="text-center">
-            <button type="button" class="m-2 btn btn-warning" @click="modificarCliente(cliente.id)">
+            <button
+              type="button"
+              class="m-2 btn btn-warning"
+              @click="modificarCliente(cliente.id)"
+            >
               <i class="bi bi-pencil-fill"></i>
             </button>
-            <button type="button" class="btn btn-danger" @click="eliminarCliente(cliente.id)">
+            <button
+              type="button"
+              class="btn btn-danger"
+              @click="eliminarCliente(cliente.id)"
+            >
               <i class="bi bi-trash"></i>
             </button>
           </td>
@@ -73,22 +122,20 @@
 </template>
 
 <script>
-import NavBar from '@/components/NavBar.vue';
-import Swal from 'sweetalert2';
+import NavBar from "@/components/NavBar.vue";
+import Swal from "sweetalert2";
 export default {
   name: "TablaClientes",
   components: {
-    NavBar
+    NavBar,
   },
   data() {
     return {
-      nombre: '',
-      apellido: '',
-      dni: '',
-      email: '',
-      clientes: [
-        
-      ],
+      nombre: "",
+      apellido: "",
+      dni: "",
+      email: "",
+      clientes: [],
     };
   },
   mounted() {
@@ -97,7 +144,7 @@ export default {
   methods: {
     async obtenerClientes() {
       try {
-        const response = await fetch('http://localhost:3000/clientes');
+        const response = await fetch("http://localhost:3000/clientes");
         if (!response) {
           throw new Error("No se pudieron obtener los datos del servidor");
         }
@@ -106,15 +153,20 @@ export default {
         this.clientes = data;
       } catch (error) {
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudieron obtener los datos del servidor',
+          icon: "error",
+          title: "Error",
+          text: "No se pudieron obtener los datos del servidor",
         });
       }
     },
     guardar() {
-      if(this.nombre.trim() === '' || this.apellido.trim() === '' || this.dni.trim() === '' || this.email.trim() === '') {
-        this.mostrarAlerta('Debe completar los campos', 'warning');
+      if (
+        this.nombre.trim() === "" ||
+        this.apellido.trim() === "" ||
+        this.dni.trim() === "" ||
+        this.email.trim() === ""
+      ) {
+        this.mostrarAlerta("Debe completar los campos", "warning");
       } else {
         const nuevoCliente = {
           id: this.clientes.length + 1,
@@ -125,75 +177,105 @@ export default {
         };
 
         this.clientes.push(nuevoCliente);
-        
+
         this.limpiar();
-        this.mostrarAlerta('Cliente guardado correctamente', 'success');
+        this.mostrarAlerta("Cliente guardado correctamente", "success");
       }
     },
     limpiar() {
-      this.nombre = '';
-      this.apellido = '';
-      this.dni = '';
-      this.email = '';
-      this.mostrarAlerta('Campos limpiados', 'info');
-      return 
+      this.nombre = "";
+      this.apellido = "";
+      this.dni = "";
+      this.email = "";
+      this.mostrarAlerta("Campos limpiados", "info");
+      return;
     },
     validarDniNie() {
-        let dniNie = this.dni.trim().toUpperCase();
-        this.dni = dniNie;
-        const regexDniNie = /^[0-9XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/;
-        if(!regexDniNie.test(dniNie)) {
-          this.mostrarAlerta('DNI/NIE no válido', 'error');
-          this.dni = '';
-          return
-        }
-        const valor = dniNie.replace(/^[XYZ]/, (letra)=> {
-          return letra === 'X' ? '0' : (letra === 'Y' ? '1' : (letra === 'Z' ? '2' : letra))
-        });
-        const numero = parseInt(valor.slice(0,9), 10);
-        const letraCalculada = 'TRWAGMYFPDXBNJZSQVHLCKE'.charAt(numero%23);
-        if (letraCalculada !== dniNie.charAt(8) || !regexDniNie.test(dniNie)) { 
-            this.mostrarAlerta('DNI/NIE no válido', 'error');
-            return false;
-        } else {
-            return true;
-        }
+      let dniNie = this.dni.trim().toUpperCase();
+      this.dni = dniNie;
+      const regexDniNie = /^[0-9XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/;
+      if (!regexDniNie.test(dniNie)) {
+        this.mostrarAlerta("DNI/NIE no válido", "error");
+        this.dni = "";
+        return;
+      }
+      const valor = dniNie.replace(/^[XYZ]/, (letra) => {
+        return letra === "X"
+          ? "0"
+          : letra === "Y"
+          ? "1"
+          : letra === "Z"
+          ? "2"
+          : letra;
+      });
+      const numero = parseInt(valor.slice(0, 9), 10);
+      const letraCalculada = "TRWAGMYFPDXBNJZSQVHLCKE".charAt(numero % 23);
+      if (letraCalculada !== dniNie.charAt(8) || !regexDniNie.test(dniNie)) {
+        this.mostrarAlerta("DNI/NIE no válido", "error");
+        return false;
+      } else {
+        return true;
+      }
     },
     modificarCliente(clienteId) {
-      const cliente = this.clientes.find(cliente => cliente.id === clienteId);
+      const cliente = this.clientes.find((cliente) => cliente.id === clienteId);
       if (cliente) {
         this.nombre = cliente.nombre;
         this.apellido = cliente.apellido;
         this.dni = cliente.dni;
         this.email = cliente.email;
 
-        this.mostrarAlerta('Datos del cliente listos para modificar', 'info');
+        this.mostrarAlerta("Datos del cliente listos para modificar", "info");
       } else {
-        this.mostrarAlerta('Cliente no encontrado', 'error');
+        this.mostrarAlerta("Cliente no encontrado", "error");
       }
     },
-    eliminarCliente(clienteId) {
-      const index = this.clientes.findIndex(cliente => cliente.id === clienteId);
-      if(index !== -1) {
-        this.clientes.splice(index, 1);
-        this.mostrarAlerta('Cliente eliminado correctamente', 'success');
-      } else {
-        this.mostrarAlerta('Cliente no encontrado', 'error');
+    async eliminarCliente(clienteId) {
+      const confirmacion = await this.mostrarConfirmacionEliminar();
+      if (confirmacion) {
+        const index = this.clientes.findIndex(
+          (cliente) => cliente.id === clienteId
+        );
+        if (index !== -1) {
+          this.clientes.splice(index, 1);
+          this.mostrarAlerta("Cliente eliminado correctamente", "success");
+        } else {
+          this.mostrarAlerta("Cliente no encontrado", "error");
+        }
       }
     },
+    async mostrarConfirmacionEliminar() {
+        // Mostrar ventana de confirmación
+        const confirmacion = await Swal.fire({
+            title: '¿Estás seguro de que deseas eliminar este cliente?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+                container: 'custom-alert-container',
+                popup: 'custom-alert',
+                confirmButton: 'custom-alert-button',
+                cancelButton: 'custom-alert-button',
+            },
+        });
+
+        return confirmacion.isConfirmed;
+     },
     mostrarAlerta(mensaje, tipo) {
       Swal.fire({
         title: mensaje,
         icon: tipo,
         customClass: {
-          container: 'custom-alert-container',
-          popup: 'custom-alert',
-          confirmButton: 'custom-alert-button',
+          container: "custom-alert-container",
+          popup: "custom-alert",
+          confirmButton: "custom-alert-button",
         },
       });
-    }
+    },
   },
-  
 };
 </script>
 
