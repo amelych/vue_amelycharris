@@ -80,7 +80,38 @@ export default {
   components: {
     NavBar
   },
+  data() {
+    return {
+      nombre: '',
+      apellido: '',
+      dni: '',
+      email: '',
+      clientes: [
+        
+      ],
+    };
+  },
+  mounted() {
+    this.obtenerClientes();
+  },
   methods: {
+    async obtenerClientes() {
+      try {
+        const response = await fetch('http://localhost:3000/clientes');
+        if (!response) {
+          throw new Error("No se pudieron obtener los datos del servidor");
+        }
+
+        const data = await response.json();
+        this.clientes = data;
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudieron obtener los datos del servidor',
+        });
+      }
+    },
     guardar() {
       if(this.nombre.trim() === '' || this.apellido.trim() === '' || this.dni.trim() === '' || this.email.trim() === '') {
         this.mostrarAlerta('Debe completar los campos', 'warning');
@@ -162,51 +193,7 @@ export default {
       });
     }
   },
-  data() {
-    return {
-      nombre: '',
-      apellido: '',
-      dni: '',
-      email: '',
-      clientes: [
-        {
-          id: 1,
-          nombre: "Juan",
-          apellido: "Perez",
-          dni: "55368308V",
-          email: "micorreo@correo.com",
-        },
-        {
-          id: 2,
-          nombre: "María",
-          apellido: "Abal",
-          dni: "92417342F",
-          email: "sucorreo@correo.com",
-        },
-        {
-          id: 3,
-          nombre: "Pedro",
-          apellido: "García",
-          dni: "34242073H",
-          email: "elcorreo@correo.com",
-        },
-        {
-          id: 4,
-          nombre: "Lucía",
-          apellido: "González",
-          dni: "Y0532559P",
-          email: "otrocorreo@correo.com",
-        },
-        {
-          id: 5,
-          nombre: "Ana",
-          apellido: "Rodríguez",
-          dni: "57249576T",
-          email: "ana@correo.com",
-        }
-      ],
-    };
-  },
+  
 };
 </script>
 
