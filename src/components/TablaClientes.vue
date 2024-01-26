@@ -237,8 +237,10 @@ export default {
           (cliente) => cliente.id === clienteId
         );
         if (index !== -1) {
-          this.clientes.splice(index, 1);
-          this.mostrarAlerta("Cliente eliminado correctamente", "success");
+          await fetch(`http://localhost:3000/clientes/${clienteId}`, {
+            method: 'DELETE',
+          });
+          // this.mostrarAlerta("Cliente eliminado correctamente", "success");
         } else {
           this.mostrarAlerta("Cliente no encontrado", "error");
         }
