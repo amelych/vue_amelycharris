@@ -65,7 +65,7 @@
               <button
                 type="button"
                 class="btn btn-primary mx-2"
-                @click="guardar"
+                @click="guardarCliente"
               >
                 Guardar
               </button>
@@ -142,6 +142,30 @@ export default {
     this.obtenerClientes();
   },
   methods: {
+    getUsuarios() {},
+    async postUsuario(usuario) {
+      try {
+        const response = await fetch('http://localhost:3000/usuarios', {
+          method: 'POST',
+          body: JSON.stringify(usuario),
+          headers: { 'Content-type': 'application/json; charset=UTF-8'},
+        });
+        const usuarioCreado = await response.json();
+        this.usuarios = [...this.usuarios, usuarioCreado];
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    putUsuario() {},
+    deleteUsuario() {},
+    // async metodoAsincrono() {
+    //   try {
+    //     const response = await fetch('url');
+    //     const data = await response.json();
+    //   } catch (error) {
+    //     // ejecución en caso de error
+    //   }
+    // },
     async obtenerClientes() {
       try {
         const response = await fetch("http://localhost:3000/clientes");
@@ -159,27 +183,77 @@ export default {
         });
       }
     },
-    guardar() {
-      if (
-        this.nombre.trim() === "" ||
-        this.apellido.trim() === "" ||
-        this.dni.trim() === "" ||
-        this.email.trim() === ""
-      ) {
-        this.mostrarAlerta("Debe completar los campos", "warning");
-      } else {
-        const nuevoCliente = {
-          id: this.clientes.length + 1,
-          nombre: this.nombre.trim().toUpperCase(),
-          apellido: this.apellido.trim().toUpperCase(),
-          dni: this.dni.trim().toUpperCase(),
-          email: this.email.trim(),
-        };
+    // guardar() {
+    //   if (
+    //     this.nombre.trim() === "" ||
+    //     this.apellido.trim() === "" ||
+    //     this.dni.trim() === "" ||
+    //     this.email.trim() === ""
+    //   ) {
+    //     this.mostrarAlerta("Debe completar los campos", "warning");
+    //   } else {
+    //     const nuevoCliente = {
+    //       id: this.clientes.length + 1,
+    //       nombre: this.nombre.trim().toUpperCase(),
+    //       apellido: this.apellido.trim().toUpperCase(),
+    //       dni: this.dni.trim().toUpperCase(),
+    //       email: this.email.trim(),
+    //     };
 
-        this.clientes.push(nuevoCliente);
+    //     this.clientes.push(nuevoCliente);
 
-        this.limpiar();
-        this.mostrarAlerta("Cliente guardado correctamente", "success");
+    //     this.limpiar();
+    //     this.mostrarAlerta("Cliente guardado correctamente", "success");
+    //   }
+    // },
+    async guardarCliente() {
+      try {
+        const validarDniNie = this.validarDniNie();
+        if (validarDniNie) {
+          const cliente = {
+            dni: this.dni.trim().toUpperCase(),
+            nombre: this.nombre.trim(),
+            apellido: this.apellido.trim(),
+            email: this.email.trim(),
+          };
+          let url = 'http://localhost:3000/clientes';
+          let metodo = 'POST';
+
+          if (this.clienteSeleccionado) {
+            url += `/${this.clienteSeleccionado.id}`;
+            metodo = 'PUT';
+          }
+
+          const response = await fetch(url, {
+            method: metodo,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(cliente),
+          });
+          if (!response.ok) {
+            throw new Error('Error al guardar el cliente en el servidor.');
+          }
+
+          this.limpiar();
+          this.obtenerClientes();
+
+          const mensaje = this.clienteSeleccionado ? 'Cliente modificado correctamente.' : 'Cliente guardado correctamente.';
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: mensaje,
+          });
+        } else {
+          this.mostrarAlerta('DNI o NIE no válido', 'error');
+        }
+      } catch (error) {
+        console.log('Error al guardar el cliente', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error al guardar el cliente en el servidor.',
+        });
       }
     },
     limpiar() {
@@ -238,7 +312,7 @@ export default {
         );
         if (index !== -1) {
           await fetch(`http://localhost:3000/clientes/${clienteId}`, {
-            method: 'DELETE',
+            method: "DELETE",
           });
           // this.mostrarAlerta("Cliente eliminado correctamente", "success");
         } else {
@@ -247,25 +321,25 @@ export default {
       }
     },
     async mostrarConfirmacionEliminar() {
-        // Mostrar ventana de confirmación
-        const confirmacion = await Swal.fire({
-            title: '¿Estás seguro de que deseas eliminar este cliente?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
-            customClass: {
-                container: 'custom-alert-container',
-                popup: 'custom-alert',
-                confirmButton: 'custom-alert-button',
-                cancelButton: 'custom-alert-button',
-            },
-        });
+      // Mostrar ventana de confirmación
+      const confirmacion = await Swal.fire({
+        title: "¿Estás seguro de que deseas eliminar este cliente?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        customClass: {
+          container: "custom-alert-container",
+          popup: "custom-alert",
+          confirmButton: "custom-alert-button",
+          cancelButton: "custom-alert-button",
+        },
+      });
 
-        return confirmacion.isConfirmed;
-     },
+      return confirmacion.isConfirmed;
+    },
     mostrarAlerta(mensaje, tipo) {
       Swal.fire({
         title: mensaje,
