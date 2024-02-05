@@ -1,8 +1,11 @@
 import express from 'express';
 const rutas = express.Router();
 
-rutas.get('/', (req, res) => {
-    res.send('Ruta de las tareas');
+import tarea from '../models/tarea.mjs';
+
+rutas.get('/', async(req, res) => {
+    const tareas = await tarea.find();
+    res.json(tareas);
 });
 
 export default rutas;
