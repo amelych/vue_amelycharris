@@ -8,4 +8,9 @@ rutas.get('/', async(req, res) => {
     res.json(tareas);
 });
 
+// rutas.post('/', async(req, res) => {
+//     new tarea();
+//     console.log(new tarea());
+// })
+
 export default rutas;
