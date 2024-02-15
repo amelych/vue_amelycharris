@@ -29,7 +29,7 @@
                 >Descripción:</span
               >
               <input
-              ref="descripcion"
+                ref="descripcion"
                 type="text"
                 class="form-control"
                 v-model="descripcion"
@@ -38,28 +38,85 @@
               />
             </div>
             <div class="input-group mb-3">
-              <span class="input-group-text custom-span" id="basic-addon1"
-                >Fecha:</span
-              >
+              <span class="input-group-text custom-span">Fecha:</span>
               <input
+                ref="fechaAlta"
+                v-model="fecha"
                 type="text"
                 class="form-control"
-                v-model="fecha"
-                id="fecha"
-                name="fecha"
+                placeholder="Seleccionar fecha"
               />
+              <button
+                @click="abrirCalendario"
+                class="btn btn-outline-secondary"
+                type="button"
+              >
+                <i class="bi bi-calendar"></i>
+              </button>
+            </div>
+            <div class="input-group mb-3 w-25">
+              <label class="input-group-text custom-span" for="salaSelect"
+                >Sala:
+              </label>
+              <select class="form-select" v-model="sala" id="salaSelect">
+                <option value="Sala 1">Sala 1</option>
+                <option value="Sala 2">Sala 2</option>
+                <option value="Sala 3">Sala 3</option>
+              </select>
             </div>
             <div class="input-group mb-3">
-              <span class="input-group-text custom-span" id="basic-addon1"
+              <span class="input-group-text custom-span" style="margin-right: 20px;">Equipamiento</span>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="equipoVideoconferencia" v-model="equipos" value="Equipo Videoconferencia">
+                <label class="form-check-label" for="equipoVideoconferencia">Equipo Videoconferencia</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="televisor" v-model="equipos" value="Televisor">
+                <label class="form-check-label" for="televisor">Televisor</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="pizarraDigital" v-model="equipos" value="Pizarra Digital">
+                <label class="form-check-label" for="pizarraDigital">Pizarra Digital</label>
+              </div>
+            </div>
+            <div class="input-group-text mb-3">
+              <span
+                class="input-group-text custom-span"
+                style="margin-right: 10px"
                 >Prioridad:</span
               >
-              <input
-                type="text"
-                class="form-control"
-                v-model="prioridad"
-                id="prioridad"
-                name="prioridad"
-              />
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  id="prioridadAlta"
+                  value="alta"
+                  v-model="prioridad"
+                />
+                <label class="form-check-label" for="prioridadAlta">Alta</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  id="prioridadMedia"
+                  value="media"
+                  v-model="prioridad"
+                />
+                <label class="form-check-label" for="prioridadMedia"
+                  >Media</label
+                >
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  id="prioridadBaja"
+                  value="baja"
+                  v-model="prioridad"
+                />
+                <label class="form-check-label" for="prioridadBaja">Baja</label>
+              </div>
             </div>
             <div class="mb-3 text-center">
               <button
@@ -76,7 +133,11 @@
               >
                 Modificar
               </button>
-              <button type="button" class="btn btn-secondary" @click="limpiarTarea">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                @click="limpiarTarea"
+              >
                 Limpiar
               </button>
             </div>
@@ -97,6 +158,8 @@
           <th>Nombre</th>
           <th>Descripción</th>
           <th>Fecha Alta</th>
+          <th>Sala Reunión</th>
+          <th>Equipamiento</th>
           <th>Prioridad</th>
           <th>Gestión</th>
         </tr>
@@ -107,12 +170,14 @@
           <td>{{ tarea.nombre }}</td>
           <td>{{ tarea.descripcion }}</td>
           <td class="text-center">{{ tarea.fecha }}</td>
+          <td class="text-center">{{ tarea.sala }}</td>
+          <td class="text">{{ tarea.equipos.join(', ') }}</td>
           <td class="text-center">{{ tarea.prioridad }}</td>
           <td class="text-center">
             <button
               type="button"
               class="m-2 btn btn-warning"
-              @click="modificarTarea(tarea._id)"
+              @click="cargarTarea(tarea)"
             >
               <i class="bi bi-pencil-fill"></i>
             </button>
@@ -132,8 +197,10 @@
   
   <script>
 import NavBar from "@/components/NavBar.vue";
-import Swal from 'sweetalert2';
-//   import Swal from "sweetalert2";
+import Swal from "sweetalert2";
+import flatpickr from "flatpickr";
+import 'flatpickr/dist/flatpickr.min.css';
+import { format } from "date-fns";
 export default {
   name: "TablaTareas",
   components: {
@@ -141,99 +208,199 @@ export default {
   },
   data() {
     return {
-        nombre: '',
-        descripcion: '',
-        fecha: '',
-        prioridad: '',
-        tareas: [],
+      nombre: "",
+      descripcion: "",
+      fecha: "",
+      sala: "",
+      equipos: [],
+      prioridad: "alta",
+      tareas: [],
+      show: false,
     };
   },
   created() {
     this.obtenerTareas();
   },
 
+  mounted() {
+    const fechaAlta = this.$refs.fechaAlta;
+    flatpickr(fechaAlta, {});
+  },
+
   methods: {
+    abrirCalendario() {
+      const fechaAlta = this.$refs.fechaAlta;
+      if (fechaAlta._flatpickr) {
+        fechaAlta._flatpickr.open();
+      }
+    },
     async obtenerTareas() {
-        try {
-            const res = await fetch('http://localhost:5000/tareas');
-            if (!res.ok) {
-                const message = `An error has occured: ${res.status}`;
-                throw new Error(message);
-            }
-            this.tareas = await res.json();
-            console.log(this.tareas);
-        } catch (error) {
-            console.log(error);
+      try {
+        const res = await fetch("http://localhost:5000/tareas");
+        if (!res.ok) {
+          const message = `An error has occured: ${res.status}`;
+          throw new Error(message);
         }
+        this.tareas = await res.json();
+        console.log(this.tareas);
+      } catch (error) {
+        console.log(error);
+      }
     },
     async guardarTarea() {
-        try {
-            const nuevaTarea = {
-                nombre: this.nombre,
-                descripcion: this.descripcion,
-                fecha: this.fecha,
-                prioridad: this.prioridad
-            };
+      try {
+        console.log(this.nombre, this.descripcion, this.fecha, this.sala, this.prioridad);
+        const nuevaTarea = {
+          nombre: this.nombre,
+          descripcion: this.descripcion,
+          fecha: format(new Date(this.fecha), "dd-MM-yyyy"),
+          sala: this.sala,
+          equipos: this.equipos,
+          prioridad: this.prioridad,
+        };
 
-            const res = await fetch('http://localhost:5000/tareas', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(nuevaTarea)
-            });
+        if (["alta", "media", "baja"].includes(nuevaTarea.prioridad)) {
+          const res = await fetch("http://localhost:5000/tareas", {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(nuevaTarea),
+          });
 
-            await Swal.fire({
-                icon: 'success',
-                title: '¡Tarea guardada!',
-                text: 'La nueva tarea se ha guardado correctamente.'
-            });
+          await Swal.fire({
+            icon: "success",
+            title: "¡Tarea guardada!",
+            text: "La nueva tarea se ha guardado correctamente.",
+          });
 
-            if (!res.ok) {
-                const message = `An error has occured: ${res.status}`;
-                throw new Error(message);
-            }
+          if (!res.ok) {
+            const message = `An error has occured: ${res.status}`;
+            throw new Error(message);
+          }
 
-            await this.obtenerTareas();
-
-            // await this.limpiarTarea();
-        } catch (error) {
-            console.error(error);
-            await Swal.fire ({
-                icon: 'error',
-                title: 'Error al guardar la tarea',
-                text: 'Ha ocurrido un error al intentar guardar la tarea. Por favor, inténtalo de nuevo.'
-            });
+          await this.obtenerTareas();
         }
+        this.limpiarTarea();
+      } catch (error) {
+        console.error(error);
+        await Swal.fire({
+          icon: "error",
+          title: "Error al guardar la tarea",
+          text: "Ha ocurrido un error al intentar guardar la tarea. Por favor, inténtalo de nuevo.",
+        });
+      }
     },
     async eliminarTarea(id) {
-        try {
-            const res = await fetch(`http://localhost:5000/tareas/${id}`, {
-                method: 'DELETE'
-            });
+      try {
+        const res = await fetch(`http://localhost:5000/tareas/${id}`, {
+          method: "DELETE",
+        });
 
-            if (!res.ok) {
-                const message = `An error has occured: ${res.status}`;
-                throw new Error(message);
-            }
-
-            await Swal.fire({
-                icon: 'success',
-                title: '¡Tarea eliminada!',
-                text: 'La nueva tarea se ha eliminado correctamente.'
-            })
-
-            await this.obtenerTareas();
-        } catch (error) {
-            console.error(error);
-            await Swal.fire ({
-                icon: 'error',
-                title: 'Error al eliminar la tarea',
-                text: 'Ha ocurrido un error al intentar eliminar la tarea. Por favor, inténtalo de nuevo.'
-            });
+        if (!res.ok) {
+          const message = `An error has occured: ${res.status}`;
+          throw new Error(message);
         }
-    }
-  }
+
+        await Swal.fire({
+          icon: "success",
+          title: "¡Tarea eliminada!",
+          text: "La nueva tarea se ha eliminado correctamente.",
+        });
+
+        await this.obtenerTareas();
+      } catch (error) {
+        console.error(error);
+        await Swal.fire({
+          icon: "error",
+          title: "Error al eliminar la tarea",
+          text: "Ha ocurrido un error al intentar eliminar la tarea. Por favor, inténtalo de nuevo.",
+        });
+      }
+    },
+    cargarTarea(tarea) {
+      this.nombre = tarea.nombre;
+      this.descripcion = tarea.descripcion;
+      this.fecha = tarea.fecha;
+      this.sala = tarea.sala;
+      this.prioridad = tarea.prioridad;
+      this.tareaSeleccionada = tarea;
+    },
+    async modificarTarea() {
+      try {
+        const tarea = this.tareaSeleccionada;
+
+        tarea.nombre = this.nombre;
+        tarea.descripcion = this.descripcion;
+        tarea.fecha = this.fecha;
+        tarea.sala = this.sala ;
+        tarea.prioridad = this.prioridad;
+
+        const res = await fetch(`http://localhost:5000/tareas/${tarea._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(tarea),
+        });
+        if (!res.ok) {
+          throw new Error(`An error has occurred: ${res.status}`);
+        }
+
+        await this.obtenerTareas();
+
+        this.limpiarCampos();
+
+        await Swal.fire({
+          icon: "success",
+          title: "Tarea modificada",
+          text: "La tarea se ha modificado correctamente",
+        });
+
+        this.tareaSeleccionada = null;
+      } catch (error) {
+        console.error(error);
+        await Swal.fire({
+          icon: "error",
+          title: "Error al modificar la tarea",
+          text: "Ha ocurrido un error al intentar modificar la tarea. Por favor, inténtalo de nuevo.",
+        });
+      }
+    },
+    mostrarAlerta(mensaje, tipo) {
+      Swal.fire({
+        title: mensaje,
+        icon: tipo,
+        customClass: {
+          container: "custom-alert-container",
+          popup: "custom-alert",
+          confirmButton: "custom-alert-button",
+        },
+      });
+    },
+    limpiarCampos() {
+      this.nombre = '',
+      this.descripcion = '',
+      this.fecha = '',
+      this.sala = null,
+      this.equipos = []
+      this.prioridad = 'alta'
+
+      Swal.fire({
+        icon: 'info',
+        title: 'Campos limpiados',
+        text: 'Los campos del formulario se han limpiado correctamente.',
+      });
+    },
+    limpiarTarea() {
+      this.nombre = "";
+      this.descripcion = "";
+      this.fecha = "";
+      this.sala = null;
+      this.equipos = [];
+      this.prioridad = "alta";
+    },
+  },
 };
 </script>
   
