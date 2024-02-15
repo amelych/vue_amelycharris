@@ -334,6 +334,7 @@ export default {
         tarea.descripcion = this.descripcion;
         tarea.fecha = this.fecha;
         tarea.sala = this.sala ;
+        tarea.equipos = this.equipos;
         tarea.prioridad = this.prioridad;
 
         const res = await fetch(`http://localhost:5000/tareas/${tarea._id}`, {
