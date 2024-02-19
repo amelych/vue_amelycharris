@@ -65,18 +65,46 @@
               </select>
             </div>
             <div class="input-group mb-3">
-              <span class="input-group-text custom-span" style="margin-right: 20px;">Equipamiento</span>
+              <span
+                class="input-group-text custom-span"
+                style="margin-right: 20px"
+                >Equipamiento</span
+              >
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="equipoVideoconferencia" v-model="equipos" value="Equipo Videoconferencia">
-                <label class="form-check-label" for="equipoVideoconferencia">Equipo Videoconferencia</label>
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="equipoVideoconferencia"
+                  v-model="equipos"
+                  value="Equipo Videoconferencia"
+                />
+                <label class="form-check-label" for="equipoVideoconferencia"
+                  >Equipo Videoconferencia</label
+                >
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="televisor" v-model="equipos" value="Televisor">
-                <label class="form-check-label" for="televisor">Televisor</label>
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="televisor"
+                  v-model="equipos"
+                  value="Televisor"
+                />
+                <label class="form-check-label" for="televisor"
+                  >Televisor</label
+                >
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="pizarraDigital" v-model="equipos" value="Pizarra Digital">
-                <label class="form-check-label" for="pizarraDigital">Pizarra Digital</label>
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="pizarraDigital"
+                  v-model="equipos"
+                  value="Pizarra Digital"
+                />
+                <label class="form-check-label" for="pizarraDigital"
+                  >Pizarra Digital</label
+                >
               </div>
             </div>
             <div class="input-group-text mb-3">
@@ -117,6 +145,16 @@
                 />
                 <label class="form-check-label" for="prioridadBaja">Baja</label>
               </div>
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text custom-span">Observaciones: </span>
+              <textarea
+                v-model="observaciones"
+                class="form-control"
+                id="descripcion"
+                placeholder="Descripción Tarea (max 256 caracteres)"
+                maxlength="256"
+              ></textarea>
             </div>
             <div class="mb-3 text-center">
               <button
@@ -171,7 +209,7 @@
           <td>{{ tarea.descripcion }}</td>
           <td class="text-center">{{ tarea.fecha }}</td>
           <td class="text-center">{{ tarea.sala }}</td>
-          <td class="text">{{ tarea.equipos.join(', ') }}</td>
+          <td class="text">{{ tarea.equipos.join(", ") }}</td>
           <td class="text-center">{{ tarea.prioridad }}</td>
           <td class="text-center">
             <button
@@ -180,6 +218,13 @@
               @click="cargarTarea(tarea)"
             >
               <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button
+              type="button"
+              class="m-2 btn btn-info"
+              @click="mostrarInfo(tarea._id)"
+            >
+              <i class="bi bi-eye-fill"></i>
             </button>
             <button
               type="button"
@@ -199,7 +244,7 @@
 import NavBar from "@/components/NavBar.vue";
 import Swal from "sweetalert2";
 import flatpickr from "flatpickr";
-import 'flatpickr/dist/flatpickr.min.css';
+import "flatpickr/dist/flatpickr.min.css";
 import { format } from "date-fns";
 export default {
   name: "TablaTareas",
@@ -215,6 +260,7 @@ export default {
       equipos: [],
       prioridad: "alta",
       tareas: [],
+      observaciones: "",
       show: false,
     };
   },
@@ -249,7 +295,13 @@ export default {
     },
     async guardarTarea() {
       try {
-        console.log(this.nombre, this.descripcion, this.fecha, this.sala, this.prioridad);
+        console.log(
+          this.nombre,
+          this.descripcion,
+          this.fecha,
+          this.sala,
+          this.prioridad
+        );
         const nuevaTarea = {
           nombre: this.nombre,
           descripcion: this.descripcion,
@@ -257,6 +309,7 @@ export default {
           sala: this.sala,
           equipos: this.equipos,
           prioridad: this.prioridad,
+          observaciones: this.observaciones,
         };
 
         if (["alta", "media", "baja"].includes(nuevaTarea.prioridad)) {
@@ -324,6 +377,7 @@ export default {
       this.fecha = tarea.fecha;
       this.sala = tarea.sala;
       this.prioridad = tarea.prioridad;
+      this.observaciones = tarea.observaciones;
       this.tareaSeleccionada = tarea;
     },
     async modificarTarea() {
@@ -333,9 +387,10 @@ export default {
         tarea.nombre = this.nombre;
         tarea.descripcion = this.descripcion;
         tarea.fecha = this.fecha;
-        tarea.sala = this.sala ;
+        tarea.sala = this.sala;
         tarea.equipos = this.equipos;
         tarea.prioridad = this.prioridad;
+        tarea.observaciones = this.observaciones;
 
         const res = await fetch(`http://localhost:5000/tareas/${tarea._id}`, {
           method: "PUT",
@@ -368,6 +423,23 @@ export default {
         });
       }
     },
+    mostrarInfo(id) {
+      const tarea = this.tareas.find((t) => t._id === id);
+
+      if (tarea) {
+        if (tarea.observaciones && tarea.observaciones.trim() !== "") {
+          this.mostrarAlerta(
+            `Información de la tarea: ${tarea.observaciones}`,
+            "info"
+          );
+        } else {
+          this.mostrarAlerta("No tiene observaciones", "error");
+        }
+      } else {
+        this.mostrarAlerta("No se encontró la tarea", "error");
+      }
+    },
+
     mostrarAlerta(mensaje, tipo) {
       Swal.fire({
         title: mensaje,
@@ -380,17 +452,18 @@ export default {
       });
     },
     limpiarCampos() {
-      this.nombre = '',
-      this.descripcion = '',
-      this.fecha = '',
-      this.sala = null,
-      this.equipos = []
-      this.prioridad = 'alta'
+      this.nombre = "";
+      this.descripcion = "";
+      this.fecha = "";
+      this.sala = null;
+      this.equipos = [];
+      this.prioridad = "alta";
+      this.observaciones = "";
 
       Swal.fire({
-        icon: 'info',
-        title: 'Campos limpiados',
-        text: 'Los campos del formulario se han limpiado correctamente.',
+        icon: "info",
+        title: "Campos limpiados",
+        text: "Los campos del formulario se han limpiado correctamente.",
       });
     },
     limpiarTarea() {
@@ -400,6 +473,7 @@ export default {
       this.sala = null;
       this.equipos = [];
       this.prioridad = "alta";
+      this.observaciones = "";
     },
   },
 };
