@@ -156,6 +156,11 @@
                 maxlength="256"
               ></textarea>
             </div>
+            <div class="custom-file">
+              <div class="input-group mb-3 w-50">
+                <input type="file" placeholder="Selecciona un archivo" class="custom-file-input form-control" id="archivo" name="archivo" accept=".pdf, .jpg, .jpeg" @change="handleFileChange" ref="fileInput">
+              </div>
+            </div>
             <div class="mb-3 text-center">
               <button
                 type="button"
@@ -245,7 +250,7 @@ import NavBar from "@/components/NavBar.vue";
 import Swal from "sweetalert2";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-import { format } from "date-fns";
+// import { format } from "date-fns";
 export default {
   name: "TablaTareas",
   components: {
@@ -261,6 +266,7 @@ export default {
       prioridad: "alta",
       tareas: [],
       observaciones: "",
+      archivo: null,
       show: false,
     };
   },
@@ -302,23 +308,36 @@ export default {
           this.sala,
           this.prioridad
         );
-        const nuevaTarea = {
-          nombre: this.nombre,
-          descripcion: this.descripcion,
-          fecha: format(new Date(this.fecha), "dd-MM-yyyy"),
-          sala: this.sala,
-          equipos: this.equipos,
-          prioridad: this.prioridad,
-          observaciones: this.observaciones,
-        };
+        // const nuevaTarea = {
+        //   nombre: this.nombre,
+        //   descripcion: this.descripcion,
+        //   fecha: format(new Date(this.fecha), "dd-MM-yyyy"),
+        //   sala: this.sala,
+        //   equipos: this.equipos,
+        //   prioridad: this.prioridad,
+        //   observaciones: this.observaciones,
+        // };
+        const formData = new FormData();
+          formData.append('nombre', this.nombre);
+          formData.append('descripcion', this.descripcion);
+          formData.append('fecha', this.fecha);
+          formData.append('sala', this.sala);
+          this.equipos.forEach(equipo => {
+            formData.append('equipos', equipo);
+          });
+          formData.append('prioridad', this.prioridad);
+          formData.append('observaciones', this.observaciones);
+          formData.append('archivo', this.archivo);
 
-        if (["alta", "media", "baja"].includes(nuevaTarea.prioridad)) {
+        if (["alta", "media", "baja"].includes(this.prioridad)) {
           const res = await fetch("http://localhost:5000/tareas", {
             method: "POST",
-            headers: {
-              "Content-type": "application/json",
-            },
-            body: JSON.stringify(nuevaTarea),
+            /*
+            // headers: {
+            //   "Content-type": "application/json",
+            // },
+            // body: JSON.stringify(nuevaTarea),*/
+            body: formData
           });
 
           await Swal.fire({
@@ -459,6 +478,8 @@ export default {
       this.equipos = [];
       this.prioridad = "alta";
       this.observaciones = "";
+      this.archivo = null;
+      this.$refs.fileInput.value = null;
 
       Swal.fire({
         icon: "info",
@@ -474,6 +495,7 @@ export default {
       this.equipos = [];
       this.prioridad = "alta";
       this.observaciones = "";
+      this.$refs.fileInput.value = null;
     },
   },
 };

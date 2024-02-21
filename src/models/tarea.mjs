@@ -9,6 +9,7 @@ const tareaSchema = new Schema ({
     equipos: [String],
     prioridad: String,
     observaciones: String,
+    archivo: File,
 });
 
 export default mongoose.model('tarea', tareaSchema);
