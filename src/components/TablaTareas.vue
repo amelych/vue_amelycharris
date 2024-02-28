@@ -245,7 +245,7 @@
   </div>
 </template>
   
-  <script>
+<script>
 import NavBar from "@/components/NavBar.vue";
 import Swal from "sweetalert2";
 import flatpickr from "flatpickr";
@@ -286,6 +286,10 @@ export default {
         fechaAlta._flatpickr.open();
       }
     },
+    handleFileChange(event) {
+      this.archivo = event.target.files[0];
+      console.log(this.archivo);
+    },
     async obtenerTareas() {
       try {
         const res = await fetch("http://localhost:5000/tareas");
@@ -294,20 +298,19 @@ export default {
           throw new Error(message);
         }
         this.tareas = await res.json();
-        console.log(this.tareas);
       } catch (error) {
         console.log(error);
       }
     },
     async guardarTarea() {
       try {
-        console.log(
-          this.nombre,
-          this.descripcion,
-          this.fecha,
-          this.sala,
-          this.prioridad
-        );
+        // console.log(
+        //   this.nombre,
+        //   this.descripcion,
+        //   this.fecha,
+        //   this.sala,
+        //   this.prioridad
+        // );
         // const nuevaTarea = {
         //   nombre: this.nombre,
         //   descripcion: this.descripcion,
@@ -328,6 +331,7 @@ export default {
           formData.append('prioridad', this.prioridad);
           formData.append('observaciones', this.observaciones);
           formData.append('archivo', this.archivo);
+          console.log(formData);
 
         if (["alta", "media", "baja"].includes(this.prioridad)) {
           const res = await fetch("http://localhost:5000/tareas", {
