@@ -447,7 +447,7 @@ export default {
       }
     },
     mostrarInfo(id) {
-      const tarea = this.tareas.find((t) => t._id === id);
+      const tarea = this.tareas.find((tarea) => tarea._id === id);
 
       if (tarea) {
         if (tarea.observaciones && tarea.observaciones.trim() !== "") {
