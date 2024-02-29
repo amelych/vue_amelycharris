@@ -516,7 +516,7 @@ export default {
 }
 
 .custom-span {
-  width: 120px;
+  width: 150px;
   display: inline-block;
   text-align: left;
 }
