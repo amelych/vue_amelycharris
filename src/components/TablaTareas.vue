@@ -224,13 +224,13 @@
             >
               <i class="bi bi-pencil-fill"></i>
             </button>
-            <button
+            <!-- <button
               type="button"
               class="m-2 btn btn-info"
               @click="mostrarInfo(tarea._id)"
             >
               <i class="bi bi-eye-fill"></i>
-            </button>
+            </button> -->
             <button
               type="button"
               class="btn btn-danger"
@@ -446,22 +446,22 @@ export default {
         });
       }
     },
-    mostrarInfo(id) {
-      const tarea = this.tareas.find((tarea) => tarea._id === id);
+    // mostrarInfo(id) {
+    //   const tarea = this.tareas.find((tarea) => tarea._id === id);
 
-      if (tarea) {
-        if (tarea.observaciones && tarea.observaciones.trim() !== "") {
-          this.mostrarAlerta(
-            `Información de la tarea: ${tarea.observaciones}`,
-            "info"
-          );
-        } else {
-          this.mostrarAlerta("No tiene observaciones", "error");
-        }
-      } else {
-        this.mostrarAlerta("No se encontró la tarea", "error");
-      }
-    },
+    //   if (tarea) {
+    //     if (tarea.observaciones && tarea.observaciones.trim() !== "") {
+    //       this.mostrarAlerta(
+    //         `Información de la tarea: ${tarea.observaciones}`,
+    //         "info"
+    //       );
+    //     } else {
+    //       this.mostrarAlerta("No tiene observaciones", "error");
+    //     }
+    //   } else {
+    //     this.mostrarAlerta("No se encontró la tarea", "error");
+    //   }
+    // },
 
     mostrarAlerta(mensaje, tipo) {
       Swal.fire({
