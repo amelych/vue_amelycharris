@@ -54,7 +54,7 @@
                 <i class="bi bi-calendar"></i>
               </button>
             </div>
-            <div class="input-group mb-3 w-25">
+            <div class="input-group mb-3 w-50">
               <label class="input-group-text custom-span" for="salaSelect"
                 >Sala:
               </label>
@@ -399,6 +399,7 @@ export default {
       this.descripcion = tarea.descripcion;
       this.fecha = tarea.fecha;
       this.sala = tarea.sala;
+      this.equipos = tarea.equipos;
       this.prioridad = tarea.prioridad;
       this.observaciones = tarea.observaciones;
       this.tareaSeleccionada = tarea;
