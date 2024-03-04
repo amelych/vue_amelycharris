@@ -136,6 +136,7 @@ export default {
       dni: "",
       email: "",
       clientes: [],
+      clienteSeleccionado: null,
     };
   },
   mounted() {
@@ -294,6 +295,7 @@ export default {
     modificarCliente(clienteId) {
       const cliente = this.clientes.find((cliente) => cliente.id === clienteId);
       if (cliente) {
+        this.clienteSeleccionado = cliente;
         this.nombre = cliente.nombre;
         this.apellido = cliente.apellido;
         this.dni = cliente.dni;
