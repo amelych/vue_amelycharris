@@ -344,7 +344,7 @@ export default {
     },
     async eliminarViaje(id) {
       try {
-        const res = await fetch(`http://localhost:5000/viaje/${id}`, {
+        const res = await fetch(`http://localhost:5000/viajes/${id}`, {
           method: "DELETE",
         });
 

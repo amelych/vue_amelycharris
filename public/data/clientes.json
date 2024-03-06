@@ -2,7 +2,7 @@
   "clientes": [
     {
       "dni": "65412378X",
-      "nombre": "Alfredo",
+      "nombre": "AlfredoS",
       "apellido": "Barros Núñez",
       "email": "alfredo@mail.com",
       "id": "1"
@@ -339,13 +339,6 @@
       "apellido": "Salvadora",
       "email": "salvador@loquesea.com",
       "id": "1df2"
-    },
-    {
-      "id": "8c1b",
-      "dni": "65412378X",
-      "nombre": "Alfredoa",
-      "apellido": "Barros Núñez",
-      "email": "alfredo@mail.com"
     }
   ],
   "articulos": [
