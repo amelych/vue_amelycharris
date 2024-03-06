@@ -23,8 +23,8 @@ const routes = [
     component: TablaTareas
   },
   {
-    path: '/articulos',
-    name: 'articulos',
+    path: '/articulo',
+    name: 'articulo',
     component: TablaArticulos
   },
   {

@@ -63,16 +63,11 @@
       "id": "10"
     },
     {
-      "id": "11",
       "dni": "Z8927237E",
-      "alta": "03/11/2023",
-      "apellido": "Ninahuam Lopera",
       "nombre": "Agustín José",
-      "direccion": "Calle Damaso Alonso, 34",
-      "provincia": "Cáceres",
-      "municipio": "Cabañas del Castillo",
-      "movil": 775266923,
-      "email": "agustin@social.com"
+      "apellido": "Ninahuam Lopera",
+      "email": "agustin@social.com",
+      "id": "11"
     },
     {
       "id": "12",
